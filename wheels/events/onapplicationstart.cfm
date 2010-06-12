@@ -31,6 +31,7 @@
 		request.cgi = $cgiScope();
 
 		// set up containers for routes, caches, settings etc
+		application.wheels._classes = {};
 		application.wheels.version = "1.1";
 		application.wheels.controllers = {};
 		application.wheels.models = {};
@@ -223,6 +224,10 @@
 				}
 			}
 		}
+
+		// active model stuff
+		application.wheels._classes.modelbase = createobject("component", "#application.wheels.wheelsComponentPath#._modelbase");
+		application.wheels._classes.model = createobject("component", "#application.wheels.wheelsComponentPath#._model");
 
 		// allow developers to inject plugins into the application variables scope
 		if (!StructIsEmpty(application.wheels.mixins))

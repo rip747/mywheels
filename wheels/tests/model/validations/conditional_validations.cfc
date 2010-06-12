@@ -1,11 +1,15 @@
 <cfcomponent extends="wheelsMapping.test">
 
 	<cffunction name="setup">
-        <cfset loc.user = createobject("component", "wheelsMapping.model").$initModelClass("Users")>
+        <cfset loc.user = model("userempty")>
         <cfset loc.user.username = "TheLongestNameInTheWorld">
         <cfset loc.args = {}>
         <cfset loc.args.property = "username">
         <cfset loc.args.maximum = "5">
+	</cffunction>
+
+	<cffunction name="teardown">
+		<cfset loc.user.$clearValidations()>
 	</cffunction>
 
 	<cffunction name="test_unless_validation_using_expression_valid">

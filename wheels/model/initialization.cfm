@@ -2,31 +2,17 @@
 	<cfargument name="name" type="string" required="true">
 	<cfscript>
 		var loc = {};
-		variables.wheels = {};
-		variables.wheels.errors = [];
-		variables.wheels.class = {};
-		variables.wheels.class.modelName = arguments.name;
+		super.$initModelClass(arguments.name);
 		variables.wheels.class.RESQLAs = "[[:space:]]AS[[:space:]][A-Za-z1-9]+";
 		variables.wheels.class.RESQLOperators = "[[:space:]]*((?:LIKE)|(?:<>)|(?:<=)|(?:>=)|(?:!=)|(?:!<)|(?:!>)|=|<|>)";
 		variables.wheels.class.RESQLWhere = "(#variables.wheels.class.RESQLOperators#[[:space:]]*)(''|'.+?'()|(-?[0-9]|\.)+()|\(-?[0-9]+(,-?[0-9]+)*\))(($|\)|[[:space:]]*(AND|OR)))";
 		variables.wheels.class.mapping = {};
-		variables.wheels.class.properties = {};
 		variables.wheels.class.accessibleProperties = {};
 		variables.wheels.class.calculatedProperties = {};
 		variables.wheels.class.associations = {};
-		variables.wheels.class.callbacks = {};
 		variables.wheels.class.keys = "";
 		variables.wheels.class.connection = {datasource=application.wheels.dataSourceName, username=application.wheels.dataSourceUserName, password=application.wheels.dataSourcePassword};
 		variables.wheels.class.automaticValidations = application.wheels.automaticValidations;
-
-		loc.callbacks = "afterNew,afterFind,afterInitialization,beforeDelete,afterDelete,beforeSave,afterSave,beforeCreate,afterCreate,beforeUpdate,afterUpdate,beforeValidation,afterValidation,beforeValidationOnCreate,afterValidationOnCreate,beforeValidationOnUpdate,afterValidationOnUpdate";
-		loc.iEnd = ListLen(loc.callbacks);
-		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
-			variables.wheels.class.callbacks[ListGetAt(loc.callbacks, loc.i)] = ArrayNew(1);
-		loc.validations = "onSave,onCreate,onUpdate";
-		loc.iEnd = ListLen(loc.validations);
-		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
-			variables.wheels.class.validations[ListGetAt(loc.validations, loc.i)] = ArrayNew(1);
 
 		// run developer's init method if it exists
 		if (StructKeyExists(variables, "init"))
@@ -168,7 +154,7 @@
 	<cfargument name="useFilterLists" type="boolean" required="false" default="true">
 	<cfscript>
 		var loc = {};
-		
+
 		variables.wheels = {};
 		variables.wheels.errors = [];
 		// copy class variables from the object in the application scope
@@ -177,7 +163,7 @@
 		// setup object properties in the this scope
 		if (IsQuery(arguments.properties) && arguments.properties.recordCount != 0)
 			arguments.properties = $queryRowToStruct(argumentCollection=arguments);
-		
+
 		if (IsStruct(arguments.properties) && !StructIsEmpty(arguments.properties))
 			$setProperties(properties=arguments.properties, setOnModel=true, $useFilterLists=arguments.useFilterLists);
 
@@ -185,10 +171,6 @@
 			$updatePersistedProperties();
 	</cfscript>
 	<cfreturn this>
-</cffunction>
-
-<cffunction name="$classData" returntype="struct" access="public" output="false">
-	<cfreturn variables.wheels.class>
 </cffunction>
 
 <cffunction name="$softDeletion" returntype="boolean" access="public" output="false">
